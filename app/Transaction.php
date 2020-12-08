@@ -66,7 +66,7 @@ class Transaction extends Model
     }
 
     public function users(){
-        return $this->hasMany('App\User');
+        return $this->belongsTo('App\User', 'users_id');
     }
 
 

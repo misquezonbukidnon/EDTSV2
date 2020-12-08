@@ -36,109 +36,85 @@ class TransactionController extends Controller
         */
 
         if ($request->ajax()) {
-            $data = Transaction::with('process_types', 'statuses');
+            $data = Transaction::with('process_types', 'statuses', 'users');
             return Datatables::of($data)
-                    ->addColumn('action', function($data){
-                        $button = '<a href="/find/records/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="mdi mdi-magnify"></i></a>';
-                        $button1 = ' <a href="/edit/transaction/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="mdi mdi-pencil"></i></a>';
-                        $button2 = ' <a href="/barcode/transaction/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="mdi mdi-barcode"></i></a>';
-                        return $button.$button1.$button2;
-                    })
-                    ->addColumn('status', function($data){
-                        // $button = 'status';
-                        // return $button;
-                        switch ($data->statuses->name) {
-                            case $data->statuses->name == "Pending":
-                                $column = '<span class="badge badge-inverse-warning">'.'<span class="status-indicator rounded-indicator bg-warning">'.'</span>'.$data->statuses->name.'</span>';
-                                return $column;
-                                break;
-                            case $data->statuses->name == "Complete":
-                                $column = '<span class="badge badge-inverse-success">'.'<span class="status-indicator rounded-indicator bg-success">'.'</span>'.$data->statuses->name.'</span>';
-                                return $column;
-                                break;
-                            case $data->statuses->name == "In Progress":
-                                $column = '<span class="badge badge-inverse-warning">'.'<span class="status-indicator rounded-indicator bg-warning">'.'</span>'.$data->statuses->name.'</span>';
-                                return $column;
+                ->addColumn('action', function($data){
+                    $button = '<a href="/find/records/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="tio-zoom_in tio-lg">zoom_in</i></a>';
+                    $button1 = ' <a href="/edit/transaction/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="tio-edit tio-lg"></i></a>';
+                    $button2 = ' <a href="/barcode/transaction/'.$data->id.'" class="btn btn-xs btn-outline-primary"><i class="tio-barcode tio-lg"></i></a>';
+                    return $button.$button1.$button2;
+                })
+                ->addColumn('status', function($data){
+                    // $button = 'status';
+                    // return $button;
+                    switch ($data->statuses->name) {
+                        case $data->statuses->name == "Complete":
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-success"></span> '.$data->statuses->name.'</span></div>';
+                            return $column;
                             break;
-                            case $data->statuses->name == "Cancelled":
-                                $column = '<span class="badge badge-inverse-danger">'.'<span class="status-indicator rounded-indicator bg-danger">'.'</span>'.$data->statuses->name.'</span>';
-                                return $column;
+                        case $data->statuses->name == "In Progress":
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-primary"></span> '.$data->statuses->name.'</span></div>';
+                            return $column;
+                        break;
+                        case $data->statuses->name == "Cancelled":
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-danger"></span> '.$data->statuses->name.'</span></div>';
+                            return $column;
+                        break;
+                        default:
+                            $message = 'Please Contact Administrator';
+                            return $message;
+                        break;  
+                    }
+                })
+                ->addColumn('client', function($data){
+                    switch ($data->process_types_id) {
+                        // Purchase Request
+                        case $data->process_types_id == 1:
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->offices->name.'</span></div>';
+                            return $column;
                             break;
-                            default:
-                                $message = 'Please Contact Administrator';
-                                return $message;
-                            break;  
-                        }
-                    })
-                    ->addColumn('client', function($data){
-                        switch ($data->process_types_id) {
-                            // Purchase Request
-                            case $data->process_types_id == 1:
-                                $column = $data->offices->name;
-                                return $column;
-                                break;
-                            // Financial Assistance
-                            case $data->process_types_id == 2:
-                                $column = $data->client;
-                                return $column;
-                                break;
-                            // Internet Billing
-                            case $data->process_types_id == 3:
-                                $column = $data->client;
-                                return $column;
-                            break;
-                            // Mobile Allowance
-                            case $data->process_types_id == 4:
-                                $column = $data->client;
-                                return $column;
-                            break;
+                    
+                        // Purchase Order
+                        case $data->process_types_id == 2:
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->client.'</span></div>';
+                            return $column;
+                        break;
 
-                            // Monetization of Leave Credits
-                            case $data->process_types_id == 5:
-                                $column = $data->client;
-                                return $column;
-                            break;
-
-                            // Payroll Overtime
-                            case $data->process_types_id == 6:
-                                $column = $data->client;
-                                return $column;
-                            break;
-
-                            // Payroll Salary
-                            case $data->process_types_id == 7:
-                                $column = $data->client;
-                                return $column;
-                            break;
-
-                            // Payroll Salary
-                            case $data->process_types_id == 8:
-                                $column = $data->client;
-                                return $column;     
-                            break;
-
-                            // Payroll Salary
-                            case $data->process_types_id == 9:
-                                $column = $data->client;
-                                return $column;
-                            break;
-                            
-                            default:
-                                $message = 'Please Contact Administrator';
-                                return $message;
-                            break;  
-                        }
-                    })
-                    ->rawColumns(['action', 'status', 'client'])
-                    ->make(true);
+                        // Voucher
+                        case $data->process_types_id == 3:
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->client.'</span></div>';
+                            return $column;
+                        break;
+                        
+                        default:
+                            $message = 'Please Contact Administrator';
+                            return $message;
+                        break;  
+                    }
+                })
+                ->addColumn('reference_id', function($data){
+                    $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->reference_id.'</span><span class="d-block font-size-sm text-body">'.strval($data->users->name).'</span></div>';
+                    return $column;
+                })
+                ->addColumn('process_types.name', function($data){
+                    $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->process_types->name.'</span></div>';
+                    return $column;
+                })
+                ->addColumn('description', function($data){
+                    $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->description.'</span></div>';
+                    return $column;
+                })
+            ->rawColumns(['reference_id', 'process_types.name', 'client', 'action', 'description', 'status'])
+            ->make(true);
         }
 
 
         $transactions = Transaction::with('offices', 'process_types', 'pr_descriptions')->get();
+        $transactioncounts = Transaction::all()->count();
         $offices = Office::all();
         $processtypes = ProcessType::all();
         $prdescriptions = PrDescription::all();
-    	return view('transaction.create',compact('transactions', 'offices','processtypes','prdescriptions'));
+    	return view('transaction.create',compact('transactions', 'offices','processtypes','prdescriptions', 'transactioncounts'));
 
     }
     
@@ -237,6 +213,7 @@ class TransactionController extends Controller
         $data->client = $ucword_10;
         $data->address = $ucword_11;
         $data->statuses_id = 2; //pending by default
+        $data->users_id = auth()->user()->id;
         $data->endorsement_date = $date;  
         $data->save();
 

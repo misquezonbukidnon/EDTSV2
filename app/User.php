@@ -54,6 +54,6 @@ class User extends Authenticatable
     }
 
     public function transactions(){
-        return $this->belongsTo('App\Transaction', 'transactions_id');
+        return $this->hasMany('App\Transaction');
     }
 }

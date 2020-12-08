@@ -2,6 +2,7 @@
 @section('content')
 	<div class="container">
 		<br>
+		@include('flash::message')
 		<!-- Summary Overview Page Header -->
 		<div class="page-header page-header-reset">
 			<div class="row align-items-center">
@@ -63,7 +64,7 @@
 					</tbody>
 					</table>
 				</div>
-		<!-- End Table -->
+				<!-- End Table -->
 			</div>
 		</div>
   <!-- End Card -->

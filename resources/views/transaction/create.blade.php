@@ -1,85 +1,149 @@
 @extends('layouts.app')
-<style>
-	.text-wrap{
-    white-space:normal;
-	}
-	.width-200{
-		width:200px;
-	}
-</style>
 @section('content')
 	<div class="container">
+		<br>
 		@include('flash::message')
-		<form action="{{ url('/store/transaction') }}" method ="POST" id="transaction_form" onSubmit='disableFunction()'>
-			@csrf
-			<div class="col-md-12">
-				<div class="row">
-					<div class="col-md-5">
-						<div class="grid">
-							<div class="grid-header">Transaction Registration</div>
-							<div class="grid-body">
-								<div class="item-wrapper">
-
-									{{--Date of Entry--}}
-									<div class="form-group">
-										<label for="inputDOE">Date of Entry</label>
-										<input type="date" class="form-control" id="inputDOE" name="date_of_entry" aria-describedby="doeHelp" placeholder="Date of Entry" required>
-										<small id="docHelp" class="form-text text-muted">Please enter the date of entry.</small>
-									</div>	
-
+		<!-- Summary Overview Page Header -->
+		<div class="page-header page-header-reset">
+			<div class="row align-items-center">
+				<div class="col-sm">
+					<h1 class="page-header-title">New Document</h1>
+					<p class="page-header-text">Create new document to track.</p>
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+						  <li class="breadcrumb-item"><a href="/home">Home</a></li>
+						  <li class="breadcrumb-item"><a href="/create/transaction">Create Transaction</a></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<!-- End Page Header -->
+		<div class="card card-lg mb-10">
+			<div class="card-header">
+				<h5 class="card-header-title">Details</h5>
+			</div>
+			<div class="card-body">
+				<form action="{{ url('/store/transaction') }}" method ="POST" id="transaction_form" onSubmit='disableFunction()'>
+					@csrf
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-5">
+								<!-- Form Group -->
+								<div class="js-form-message form-group">
+									<label class="input-label" for="signinSrEmail">Date of Entry</label>
+									<input type="date" class="form-control form-control-sm" name="date_of_entry" id="inputDOE" tabindex="1" required data-msg="Please enter a valid date.">
 									{{-- Status Transaction	 --}}
 									<input type="hidden" id="statid" name="statuses_id" value="2">
+									<br>
 									{{-- <button disabled class="btn btn-outline-primary" type=button id="btnverzenden2" style="display: none"><span class="glyphicon glyphicon-refresh"></span>Submitting</button>    --}}
-									<button class="btn btn-outline-primary" type=submit name=verzenden id="btnverzenden">Submit</button>
+									<button class="btn btn-sm btn-outline-primary" type=submit name=verzenden id="btnverzenden">Submit</button>
 								</div>
+								<!-- End Form Group -->
 							</div>
-						</div>
-					</div>
-					<div class="col-md-7">
-				        <div class="grid">
-				        	<div class="grid-header">Information</div>
-				          	<div class="grid-body">
-					            <div class="item-wrapper">
-
-					            	<div class="form-group">
-										<label for="selectOffice">Select Process</label>
-										<select class="custom-select" name="process_type" id="process_selector" required>
-										<option value="">Click to select</option>		
-										{{-- @foreach ($processtypes as $process)					
-											<option value="{{$process->id}}"> {{ $process->name}}
-											</option>
-										@endforeach --}}
+							<div class="col-md-7">
+								<!-- Select Process Form Group -->
+								<div class="js-form-message form-group">
+									<label class="input-label" for="inputSelect">Select</label>
+									<select name="process_type" id="process_selector" class="custom-select custom-select-sm">
+										<option value="0">Click to select</option>		
 										<option value="1">Purchase Request</option>
-										<option value="8">Voucher</option>
-										<option value="9">Purchase Order</option>
+										<option value="2">Purchase Order</option>
+										<option value="3">Voucher</option>
+									</select>
+								</div> 
+								<!-- End Form Group -->
+
+								{{-- purchase request --}}
+								<div class="selectTypePR" id="PR" style="display: none;">
+									<input type="hidden" name="trigger" value="1">
+									{{--Office--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectOffice">Office</label>
+										<select class="custom-select custom-select-sm" name="offices_id">
+										<option value="">Click to select</option>		
+										@foreach ($offices as $office)					
+											<option value="{{$office->id}}"> {{ $office->name}}
+											</option>
+										@endforeach
 										</select>
-										<small id="officeHelp" class="form-text text-muted">Please select office.</small>
 									</div>
-
-
-									{{-- Purchase Request --}}
-									<div class="selectTypePR" id="PR" style="display: none;">
-										<input type="hidden" name="trigger" value="1">
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
+				
+									{{--Reference No.--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputEstamount">Reference No.</label>
+										<div class="row">
+											<div class="col-sm-4">
+												<label for="inputEstamount"><small><i>Select Fund Type.</i></small></label>
+												<select class="custom-select custom-select-sm" name="fund">
+													<option value="">Select Fund</option>
+													<option value="GF">General Fund</option>
+													<option value="TF">Trust Fund</option>
+													<option value="SEF">Special Education Fund</option>		
+												</select>
+											</div>
+											<div class="col-sm-8">
+												<label for="inputEstamount"><small><i>Reference No.</i></small></label>
+												<input type="text" class="form-control form-control-sm" id="inputPrnumber" name="reference_id" aria-describedby="prnumberHelp" required/>
+											</div>
 										</div>
+									</div>	
+						
+									{{--Particulars--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectProcesstype">Particulars</label>
+										<select class="custom-select custom-select-sm" name="pr_descriptions_id" required>
+										<option value="">Click to select</option>		
+										@foreach ($prdescriptions as $prdescription)	
+											<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
+											</option>
+										@endforeach
+										</select>
+									</div>
+				
+									{{--Purpose--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputPurpose">Purpose</label>
+										<input type="text" class="form-control form-control-sm" id="inputPurpose" name="description" aria-describedby="purposeHelp">
+									</div>	
+				
+									{{--Purchase Request  Estimated Amount--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputEstamount">Approved Budget for the Contract</label>
+										<input type="text" class="form-control form-control-sm" id="MoneyLabel" name="est_amount" aria-describedby="estamountHelp" required>
+									</div>
+								</div>
+								{{-- end purchase request --}}
 
-										{{--Reference No.--}}
+								{{-- Purchase Order --}}
+								<div class="selectTypePODR" id="PODR" style="display: none;">
+
+									{{-- Purchase Order Reference ID --}}
+									<input type="hidden" name="trigger" value="2">
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputReferenceIdVoucher">Purchase Order Reference No.</label>
 										<div class="form-group">
-											<label for="inputEstamount">Reference No.</label>
+											<div class="row">
+												<div class="col-sm-3">
+													<label for="inputEstamount"><small><i>Fixed Input</i></small></label>
+													<input type="text" class="form-control form-control-sm" id="inputPrnumber" name="po" aria-describedby="prnumberHelp" value="PO" readonly>
+												</div>
+												<div class="col-sm-9">
+													<label for="inputEstamount"><small><i>Reference No.</i></small></label>
+													<input type="text" class="form-control form-control-sm" id="inputPrnumber" name="reference_id" aria-describedby="prnumberHelp" required>
+												</div>
+											</div>
+										</div>	
+									</div>
+									
+									{{-- Reference ID --}}
+									<div class="js-form-message form-group">
+										<div class="form-group">
+											<label class="input-label" for="inputEstamount">Sub Reference No.</label>
 											<div class="row">
 												<div class="col-sm-4">
 													<label for="inputEstamount"><small><i>Select Fund Type.</i></small></label>
-													<select class="custom-select" name="fund" required>
+													<select class="custom-select custom-select-sm" name="fund" required>
 														<option value="">Select Fund</option>
 														<option value="GF">General Fund</option>
 														<option value="TF">Trust Fund</option>
@@ -88,365 +152,80 @@
 												</div>
 												<div class="col-sm-8">
 													<label for="inputEstamount"><small><i>Reference No.</i></small></label>
-													<input type="text" class="form-control" id="inputPrnumber" name="reference_id" aria-describedby="prnumberHelp" required>
+													<input type="text" class="form-control form-control-sm" id="inputPrnumber" name="sub_reference_id" aria-describedby="prnumberHelp" required>
 												</div>
 											</div>
-											<small id="prnumberHelp" class="form-text text-muted">Please enter PR number.</small>
 										</div>	
-							
-										{{--Particulars--}}
-										<div class="form-group">
-											<label for="selectProcesstype">Particulars</label>
-											<select class="custom-select" name="pr_descriptions_id" required>
-											<option value="">Click to select</option>		
-											@foreach ($prdescriptions as $prdescription)	
-												<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="processtypeHelp" class="form-text text-muted">Select Particulars.</small>
-										</div>
-
-										{{--Purpose--}}
-										<div class="form-group">
-											<label for="inputPurpose">Purpose</label>
-											<input type="text" class="form-control" id="inputPurpose" name="description" aria-describedby="purposeHelp">
-											<small id="purposeHelp" class="form-text text-muted">Purchase Request Purpose</small>
-										</div>	
-
-										{{--Purchase Request  Estimated Amount--}}
-										<div class="form-group">
-											<label for="inputEstamount">Approved Budget for the Contract</label>
-											<input type="text" class="form-control" id="PRInputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the amount.</small>
-										</div>
 									</div>
-									{{-- End --}}
 
-									{{-- Financial Assistance --}}
-									{{-- <div class="selectTypeFA" id="FA" style="display: none;"> --}}
-
-										{{-- Beneficiary --}}
-										{{-- <div class="form-group">
-											<label for="supplier">Beneficiary</label>												
-											<input id="FAsupplier" type="text" name="supplier" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input beneficiary name.</small>
-										</div> --}}
-
-										{{-- Address --}}
-										{{-- <div class="form-group">
-											<label for="supplier_address">Address</label>												
-											<input id="FAsupplier_address" type="text" name="supplier_address" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input beneficiary address.</small>
-										</div> --}}
-
-										{{--Purchase Request  Estimated Amount--}}
-										{{-- <div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="FAInputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter amount.</small>
-										</div> --}}
-
-									{{-- </div> --}}
-									{{-- End --}}
-
-									{{-- Internet Billing --}}
-									<div class="selectTypeIB" id="IB" style="display: none;">
-										{{--Office--}}
-
-										{{--Reference ID--}}
-										<div class="form-group">
-											<label for="inputReferenceIdInternetBilling">Reference No.</label>
-											<input type="text" class="form-control" id="inputReferenceIdInternetBilling" name="reference_id" aria-describedby="prnumberHelp" required>
-											<small id="prnumberHelp" class="form-text text-muted">Please enter Reference number.</small>
-										</div>	
-
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div>
-										{{-- Beneficiary --}}
-										<div class="form-group">
-											<label for="supplier">Client</label>												
-											<input id="IBsupplier" type="text" name="supplier" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input client name.</small>
-										</div>
-
-										{{-- Address --}}
-										<div class="form-group">
-											<label for="supplier_address">Address</label>												
-											<input id="IBsupplier_address" type="text" name="supplier_address" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input client address.</small>
-										</div>
-
-										{{--Purchase Request  Estimated Amount--}}
-										<div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="IBInputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter amount.</small>
-										</div>
+									{{--Office--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectOffice">Office</label>
+										<select class="custom-select custom-select-sm" name="offices_id"  required>
+										<option value="">Click to select</option>		
+										@foreach ($offices as $office)					
+											<option value="{{$office->id}}"> {{ $office->name}}
+											</option>
+										@endforeach
+										</select>
 									</div>
-									{{-- End --}}
 
-									{{-- Mobile Allowance --}}
-									{{-- <div class="selectTypeMA" id="MA" style="display: none;"> --}}
-										{{-- Beneficiary --}}
-										{{-- <div class="form-group">
-											<label for="supplier">Client</label>												
-											<input id="MAsupplier" type="text" name="supplier" value="LGU Group Mobile Allowance" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input client information.</small>
-										</div> --}}
-
-										{{--Purchase Request  Estimated Amount--}}
-										{{-- <div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="MAnputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the total amount.</small>
-										</div> --}}
-									{{-- </div> --}}
-									{{-- End --}}
-
-									{{-- Monetization of Leave Credits --}}
-									{{-- <div class="selectTypeMLC" id="MLC" style="display: none;"> --}}
-										{{--Office--}}
-										{{-- <div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div> --}}
-										{{-- Beneficiary --}}
-										{{-- <div class="form-group">
-											<label for="supplier">Client</label>												
-											<input id="MLCsupplier" type="text" name="supplier" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input client information.</small>
-										</div> --}}
-
-										{{--Purchase Request  Estimated Amount--}}
-										{{-- <div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="MLCnputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the total amount.</small>
-										</div> --}}
-									{{-- </div> --}}
-									{{-- End --}}
-
-									{{-- Payroll Overtime --}}
-									<div class="selectTypePO" id="PO" style="display: none;">
-
-										{{--Reference ID--}}
-										<div class="form-group">
-											<label for="inputReferenceIdPayrollOvertime">Reference No.</label>
-											<input type="text" class="form-control" id="inputReferenceIdPayrollOvertime" name="reference_id" aria-describedby="prnumberHelp" required>
-											<small id="prnumberHelp" class="form-text text-muted">Please enter Reference number.</small>
-										</div>	
-
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div>
-
-										{{--Beneficiary--}}
-										<div class="form-group">
-											<label for="selectOffice">Payroll Employee Status</label>
-											<select class="custom-select" name="supplier" required>
-											<option value="">Click to select</option>	
-											<option value="Regular">Regular</option>	
-											<option value="Casual">Casual</option>
-											<option value="Job Order">Job Order</option>
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select employee status.</small>
-										</div>
-
-										{{--Purchase Request  Estimated Amount--}}
-										<div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="POinputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the total amount.</small>
-										</div>
+									{{--Purchase Request Description--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectProcesstype">Particulars</label>
+										<select class="custom-select custom-select-sm" name="pr_descriptions_id" required>
+										<option value="">Click to select</option>		
+										@foreach ($prdescriptions as $prdescription)	
+											<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
+											</option>
+										@endforeach
+										</select>
 									</div>
-									{{-- End --}}
 
-									{{-- Payroll Salary --}}
-									<div class="selectTypePS" id="PS" style="display: none;">
+									{{--Purpose--}}
+									<div class="js-form-message form-groupp">
+										<label class="input-label" for="inputPurpose">Purpose</label>
+										<input type="text" class="form-control form-control-sm" id="inputPurpose" name="description" aria-describedby="purposeHelp">
+									</div>	<br>
 
-										{{-- Reference ID --}}
-										<div class="form-group">
-											<label for="inputReferenceIdPayrollSalary">Reference No.</label>
-											<input type="text" class="form-control" id="inputReferenceIdPayrollSalary" name="reference_id" aria-describedby="prnumberHelp" required>
-											<small id="prnumberHelp" class="form-text text-muted">Please enter Reference number.</small>
-										</div>	
-
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div>
-
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Employee Status</label>
-											<select class="custom-select" name="supplier" required>
-											<option value="">Click to select</option>	
-											<option value="Regular">Regular</option>	
-											<option value="Casual">Casual</option>
-											<option value="Job Order">Job Order</option>
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select employee status.</small>
-										</div>
-
-										{{--Purchase Request  Estimated Amount--}}
-										<div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="PSinputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the total amount.</small>
-										</div>
+									{{-- Contract Price --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputEstamount">Contract Price</label>
+										<input type="text" class="form-control form-control-sm" id="MoneyLabel" name="est_amount" aria-describedby="estamountHelp" required>
 									</div>
-									{{-- End --}}
 
-									{{-- Voucher --}}
-									<div class="selectTypeVCR" id="VCR" style="display: none;">
-										<input type="hidden" name="trigger" value="3">
-										{{-- Voucher Reference ID --}}
-										<div class="form-group">
-											<label for="inputReferenceIdVoucher">Voucher Reference No.</label>
-											<input type="text" class="form-control" id="inputReferenceIdVoucher" name="reference_id" aria-describedby="prnumberHelp" required>
-											<small id="voucherHelp" class="form-text text-muted">Please enter Reference number.</small>
-										</div>
-										
-										{{-- Reference ID --}}
+									{{-- Supplier --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="supplier">Supplier</label>												
+										<input id="GSOsupplier" type="text" name="supplier" class="form-control form-control-sm">
+									</div>
+
+									{{-- Address --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="supplier_address">Supplier Address</label>												
+										<input id="supplier_address" type="text" name="supplier_address" class="form-control form-control-sm">
+									</div>
+								</div>
+								{{-- end purchase order --}}
+
+								{{-- voucher --}}
+								<div class="selectTypeVCR" id="VCR" style="display: none;">
+									<input type="hidden" name="trigger" value="3">
+									{{-- Voucher Reference ID --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputReferenceIdVoucher">Voucher Reference No.</label>
+										<input type="text" class="form-control form-control-sm" id="inputReferenceIdVoucher" name="reference_id" aria-describedby="prnumberHelp" required>
+									</div>
+									
+									{{-- Reference ID --}}
+									<div class="js-form-message form-group">
 										<div class="form-group">
 											<div class="form-group">
-												<div class="form-group">
-													<label for="inputEstamount">Sub Reference No.</label>
-													<div class="row">
-														<div class="col-sm-4">
-															<label for="inputEstamount"><small><i>Select Fund Type.</i></small></label>
-															<select class="custom-select" name="fund" required>
-																<option value="">Select Fund</option>
-																<option value="GF">General Fund</option>
-																<option value="TF">Trust Fund</option>
-																<option value="SEF">Special Education Fund</option>		
-															</select>
-														</div>
-														<div class="col-sm-8">
-															<label for="inputEstamount"><small><i>Reference No.</i></small></label>
-															<input type="text" class="form-control" id="inputPrnumber" name="sub_reference_id" aria-describedby="prnumberHelp" required>
-														</div>
-													</div>
-												</div>	
-												<small id="referenceIdMainHelp" class="form-text text-muted">Please enter main Reference number.</small>
-											</div>
-										</div>
-
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div>
-
-										{{--Purchase Request Description--}}
-										<div class="form-group">
-											<label for="selectProcesstype">Particulars</label>
-											<select class="custom-select" name="pr_descriptions_id" required>
-											<option value="">Click to select</option>		
-											@foreach ($prdescriptions as $prdescription)	
-												<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="processtypeHelp" class="form-text text-muted">Select Particulars.</small>
-										</div>
-
-										{{--Purpose--}}
-										<div class="form-group">
-											<label for="inputPurpose">Purpose</label>
-											<input type="text" class="form-control" id="inputPurpose" name="description" aria-describedby="purposeHelp">
-											<small id="purposeHelp" class="form-text text-muted">Purchase Request Purpose</small>
-										</div>	
-
-										{{-- Beneficiary --}}
-										<div class="form-group">
-											<label for="supplier">Payee</label>												
-											<input id="VCRsupplier" type="text" name="supplier" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input Payee name.</small>
-										</div>
-
-										{{-- Classification???? --}}
-
-										{{--Purchase Request  Estimated Amount--}}
-										<div class="form-group">
-											<label for="inputEstamount">Amount</label>
-											<input type="text" class="form-control" id="PSinputEstamount" name="est_amount" aria-describedby="estamountHelp" required>
-											<small id="estamountHelp" class="form-text text-muted">Please enter the total amount.</small>
-										</div>
-									</div>
-									{{-- End --}}
-
-									{{-- Purchase Order --}}
-									<div class="selectTypePODR" id="PODR" style="display: none;">
-
-										{{-- Purchase Order Reference ID --}}
-										<input type="hidden" name="trigger" value="2">
-										<div class="form-group">
-											<label for="inputReferenceIdVoucher">Purchase Order Reference No.</label>
-											<div class="form-group">
-												<div class="row">
-													<div class="col-sm-3">
-														<label for="inputEstamount"><small><i>Fixed Input</i></small></label>
-														<input type="text" class="form-control" id="inputPrnumber" name="po" aria-describedby="prnumberHelp" value="PO" readonly>
-													</div>
-													<div class="col-sm-9">
-														<label for="inputEstamount"><small><i>Reference No.</i></small></label>
-														<input type="text" class="form-control" id="inputPrnumber" name="reference_id" aria-describedby="prnumberHelp" required>
-													</div>
-												</div>
-											</div>	
-											<small id="voucherHelp" class="form-text text-muted">Please enter Reference number.</small>
-										</div>
-										
-										{{-- Reference ID --}}
-										<div class="form-group">
-											<div class="form-group">
-												<label for="inputEstamount">Sub Reference No.</label>
+												<label class="input-label" for="inputEstamount">Sub Reference No.</label>
 												<div class="row">
 													<div class="col-sm-4">
-														<label for="inputEstamount"><small><i>Select Fund Type.</i></small></label>
-														<select class="custom-select" name="fund" required>
+														<label class="input-label" for="inputEstamount"><small><i>Select Fund Type.</i></small></label>
+														<select class="custom-select custom-select-sm" name="fund" required>
 															<option value="">Select Fund</option>
 															<option value="GF">General Fund</option>
 															<option value="TF">Trust Fund</option>
@@ -454,110 +233,289 @@
 														</select>
 													</div>
 													<div class="col-sm-8">
-														<label for="inputEstamount"><small><i>Reference No.</i></small></label>
-														<input type="text" class="form-control" id="inputPrnumber" name="sub_reference_id" aria-describedby="prnumberHelp" required>
+														<label class="input-label" for="inputEstamount"><small><i>Reference No.</i></small></label>
+														<input type="text" class="form-control form-control-sm" id="inputPrnumber" name="sub_reference_id" aria-describedby="prnumberHelp" required>
 													</div>
 												</div>
 											</div>	
-											<small id="referenceIdMainHelp" class="form-text text-muted">Please enter main Reference number.</small>
-										</div>
-
-										{{--Office--}}
-										<div class="form-group">
-											<label for="selectOffice">Office</label>
-											<select class="custom-select" name="offices_id"  required>
-											<option value="">Click to select</option>		
-											@foreach ($offices as $office)					
-												<option value="{{$office->id}}"> {{ $office->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="officeHelp" class="form-text text-muted">Please select office.</small>
-										</div>
-
-										{{--Purchase Request Description--}}
-										<div class="form-group">
-											<label for="selectProcesstype">Particulars</label>
-											<select class="custom-select" name="pr_descriptions_id" required>
-											<option value="">Click to select</option>		
-											@foreach ($prdescriptions as $prdescription)	
-												<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
-												</option>
-											@endforeach
-											</select>
-											<small id="processtypeHelp" class="form-text text-muted">Select Particulars.</small>
-										</div>
-
-										{{--Purpose--}}
-										<div class="form-group">
-											<label for="inputPurpose">Purpose</label>
-											<input type="text" class="form-control" id="inputPurpose" name="description" aria-describedby="purposeHelp">
-											<small id="purposeHelp" class="form-text text-muted">Purchase Request Purpose</small>
-										</div>	
-
-										{{-- Contract Price --}}
-										<div class="form-group">
-											<label for="amount">Contract Price</label>												
-											<input id="amount" type="text" name="est_amount" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input contract Price.</small>
-										</div>
-
-										{{-- Supplier --}}
-										<div class="form-group">
-											<label for="supplier">Supplier</label>												
-											<input id="GSOsupplier" type="text" name="supplier" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input supplier name.</small>
-										</div>
-
-										{{-- Address --}}
-										<div class="form-group">
-											<label for="supplier_address">Supplier Address</label>												
-											<input id="supplier_address" type="text" name="supplier_address" class="form-control">
-											<small id="rofficeHelp" class="form-text text-muted">Please input supplier address.</small>
 										</div>
 									</div>
-									{{-- End --}}
-								</div>
-					        </div>
-				        </div>
-        			</div>
-				</div>
-			</div>			
-        	<div class="grid">
-				<div class="grid-header">Registered Transactions</div>
-				<div class="grid-body">
-					<div class="item-wrapper">
-						<div class="table-responsive">
-							<table id="transactions-data-table" class="table table-bordered table-condensed" width="100%">
-								<thead>
-									<tr>
-										<th>Ref. #</th>
-										<th>Process</th>
-										<th>Client</th>
-										<th>Description</th>
-										<th>Status</th>
-										<th align="center">Action</th>
-									</tr>
-								</thead>
-								<tbody>
 
-								</tbody>
-								<tfoot>
-									<tr>
-										<th>Ref. #</th>
-										<th>Process</th>
-										<th>Client</th>
-										<th>Description</th>
-										<th>Status</th>
-										<th align="center">Action</th>
-									</tr>
-								</tfoot>
-							</table>
+									{{--Office--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectOffice">Office</label>
+										<select class="custom-select custom-select-sm" name="offices_id"  required>
+										<option value="">Click to select</option>		
+										@foreach ($offices as $office)					
+											<option value="{{$office->id}}"> {{ $office->name}}
+											</option>
+										@endforeach
+										</select>
+									</div>
+
+									{{--Purchase Request Description--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="selectProcesstype">Particulars</label>
+										<select class="custom-select custom-select-sm" name="pr_descriptions_id" required>
+										<option value="">Click to select</option>		
+										@foreach ($prdescriptions as $prdescription)	
+											<option value="{{$prdescription->id}}"> {{ $prdescription->name}}
+											</option>
+										@endforeach
+										</select>
+									</div>
+
+									{{--Purpose--}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputPurpose">Purpose</label>
+										<input type="text" class="form-control form-control-sm" id="inputPurpose" name="description" aria-describedby="purposeHelp">
+									</div>	
+
+									{{-- Beneficiary --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="supplier">Payee</label>												
+										<input id="VCRsupplier" type="text" name="supplier" class="form-control form-control-sm">
+									</div>
+
+									{{-- Classification???? --}}
+
+									{{-- amount --}}
+									<div class="js-form-message form-group">
+										<label class="input-label" for="inputEstamount">Amount</label>
+										<input type="text" class="form-control form-control-sm" id="MoneyLabel" name="est_amount" aria-describedby="estamountHelp" required>
+									</div>
+								</div>
+								{{-- end voucher --}}
+
+							</div>
 						</div>
 					</div>
+				</form>
+			</div>
+		</div>
+		<!-- End Card -->
+
+		<!-- Table -->
+			{{-- <div class="table-responsive datatable-custom">
+				<table id="datatableWithPagination" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
+					"order": [],
+					"isShowPaging": false,
+             		"pagination": "datatableWithPaginationPagination",
+					"processing": true,
+					"serverSide": true,
+					"deferRender": true,
+					"pagination": "datatableWithPaginationPagination",
+					"ajax": "/create/transaction",
+					"columns": [
+						{ "data": "reference_id", "name": "reference_id" },
+						{ "data": "process_types.name", "name": "process_types.name" },
+						{ "data": "client", "name": "client" },
+						{ "data": "description", "name": "description" },
+						{ "data": "status", "name": "status" },
+						{ "data": "action", "name": "action" }
+					]
+				  }'>
+					<thead class="thead-light">
+						<tr>
+							<th>Ref. #</th>
+							<th>Process</th>
+							<th>Client</th>
+							<th>Description</th>
+							<th>Status</th>
+							<th align="center">Action</th>
+						</tr>
+						<tr>
+							<th>
+								<input type="text" id="colsearch1" class="form-control form-control-sm" placeholder="Search reference #">
+							</th>
+							<th>
+								<select id="colsearch2" class="js-select2-custom"
+										data-hs-select2-options='{
+										 	"minimumResultsForSearch": "Infinity",
+										  	"customClass": "custom-select custom-select-sm text-capitalize",
+										  	"dropdownAutoWidth": true,
+                      						"width": true
+										}'>
+								  	<option value="">Any</option>
+								 	 <option value="Purchase Request">Purchase Request</option>
+								 	<option value="Purchase Order">Purchase Order</option>
+								  	<option value="Voucher">Voucher</option>
+								</select>
+							</th>
+							<th>
+								<input type="text" id="colsearch3" class="form-control form-control-sm" placeholder="Search client">
+							</th>
+							<th>
+								<input type="text" id="colsearch4" class="form-control form-control-sm" placeholder="Search description">
+							</th>
+							<th>
+								<select id="colsearch5" class="js-select2-custom"
+										data-hs-select2-options='{
+											"minimumResultsForSearch": "Infinity",
+											"customClass": "custom-select custom-select-sm text-capitalize",
+											"dropdownAutoWidth": true,
+											"width": true
+										}'>
+								  	<option value="">Any</option>
+								 	<option value="In Progress">In Progress</option>
+								 	<option value="Cancelled">Cancelled</option>
+								  	<option value="Completed">Completed</option>
+								</select>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div> --}}
+		<!-- End Table -->
+		<!-- Card -->
+		<div class="card">
+			<!-- Header -->
+			<div class="card-header">
+			<div class="row justify-content-between align-items-center flex-grow-1">
+				<div class="col-12 col-md">
+					<div class="d-flex justify-content-between align-items-center">
+						<h5 class="card-header-title">Users</h5>
+						 <!-- Unfold -->
+						<div class="hs-unfold">
+							<a class="js-hs-unfold-invoker btn btn-icon btn-sm btn-ghost-secondary rounded-circle" href="javascript:;"
+							data-hs-unfold-options='{
+								"target": "#showHideDropdown",
+								"type": "css-animation"
+							}'>
+							<i class="tio-table"></i>
+							</a>
+					
+							<div id="showHideDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right dropdown-card" style="width: 15rem;">
+							<div class="card card-sm">
+								<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center mb-3">
+									<span class="mr-2">Country</span>
+					
+									<!-- Checkbox Switch -->
+									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_country">
+									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_country" checked>
+									<span class="toggle-switch-label">
+										<span class="toggle-switch-indicator"></span>
+									</span>
+									</label>
+									<!-- End Checkbox Switch -->
+								</div>
+					
+								<div class="d-flex justify-content-between align-items-center mb-3">
+									<span class="mr-2">Position</span>
+					
+									<!-- Checkbox Switch -->
+									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_position">
+									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_position" checked>
+									<span class="toggle-switch-label">
+										<span class="toggle-switch-indicator"></span>
+									</span>
+									</label>
+									<!-- End Checkbox Switch -->
+								</div>
+					
+								<div class="d-flex justify-content-between align-items-center">
+									<span class="mr-2">Status</span>
+					
+									<!-- Checkbox Switch -->
+									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_status">
+									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_status" checked>
+									<span class="toggle-switch-label">
+										<span class="toggle-switch-indicator"></span>
+									</span>
+									</label>
+									<!-- End Checkbox Switch -->
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+						<!-- End Unfold -->
+					</div>
 				</div>
-			</div>    
-		</form>
+		
+				<div class="col-auto">
+				<!-- Filter -->
+				<form>
+					<!-- Search -->
+					<div class="input-group input-group-merge input-group-flush">
+					<div class="input-group-prepend">
+						<div class="input-group-text">
+						<i class="tio-search"></i>
+						</div>
+					</div>
+					<input id="datatableWithSearchInput" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
+					</div>
+					<!-- End Search -->
+				</form>
+				<!-- End Filter -->
+				</div>
+			</div>
+			</div>
+			<!-- End Header -->
+		
+			<!-- Table -->
+			<div class="table-responsive datatable-custom">
+			<table id="datatableWithSearch" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+					data-hs-datatables-options='{
+					"order": [],
+					"search": "#datatableWithSearchInput",
+					"isResponsive": false,
+					"isShowPaging": false,
+					"pagination": "datatableWithSearch"
+					}'>
+				<thead class="thead-light">
+				<tr>
+					<th>Name</th>
+					<th>Position</th>
+					<th>Country</th>
+					<th>Status</th>
+				</tr>
+				</thead>
+		
+				<tbody>
+					<tr>
+						<td>
+						  <a class="media align-items-center" href="../user-profile.html">
+							<div class="avatar avatar-circle mr-3">
+							  <img class="avatar-img" src="{{ asset('img/160x160/img10.jpg') }}" alt="Image Description">
+							</div>
+							<div class="media-body">
+							  <span class="d-block h5 text-hover-primary mb-0">Amanda Harvey <i class="tio-verified text-primary" data-toggle="tooltip" data-placement="top" title="Top endorsed"></i></span>
+							  <span class="d-block font-size-sm text-body">amanda@example.com</span>
+							</div>
+						  </a>
+						</td>
+						<td>
+						  <span class="d-block h5 mb-0">Director</span>
+						  <span class="d-block font-size-sm">Human resources</span>
+						</td>
+						<td>United Kingdom <span class="text-hide">Code: GB</span></td>
+						<td>
+						  <span class="legend-indicator bg-success"></span>Active
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<!-- End Table -->
+		
+			<!-- Footer -->
+			<div class="card-footer">
+			<!-- Pagination -->
+			<div class="d-flex justify-content-center justify-content-sm-end">
+				<nav id="datatableWithSearch" aria-label="Activity pagination"></nav>
+			</div>
+			<!-- End Pagination -->
+			</div>
+			<!-- End Footer -->
+		</div>
+		<!-- End Card -->
+		
+		<br><br>
 	</div>
 @endsection
 @section('script')
@@ -565,61 +523,81 @@
 		$('div.alert').not('.alert-important').delay(3000).fadeOut(350);
 	</script>
 
-	{{-- <script>
-		$(function() {
-		    $('#transactions-data-table').DataTable(function(){
-				responsive: true
-			});
+	<script>
+		$(document).on('ready', function () {
+		// initialization of datatables
+		var datatable = $.HSCore.components.HSDatatables.init($('#datatableWithSearch'));
+	
+		$('#toggleColumn_position').change(function (e) {
+			datatableSortingColumn.columns(1).visible(e.target.checked)
+		})
+	
+		$('#toggleColumn_country').change(function (e) {
+			datatable.columns(2).visible(e.target.checked)
+		})
+	
+		$('#toggleColumn_status').change(function (e) {
+			datatableSortingColumn.columns(3).visible(e.target.checked)
+		})
 		});
-	</script> --}}
+  	</script>
 
 	<script>
-		// $(function(){
-		// 	$("#btnverzenden").click(function () {
-		// 		$("#btnverzenden").hide(); 
-		// 		$("#btnverzenden2").show(); 
-		// 	});
-		// });
-
 		function disableFunction() {
 			$('#btnverzenden').prop('disabled', true);
 		}
 	</script>
 
 	<script>
-		$(function() {
-		    $('#transactions-data-table').DataTable({
-		        processing: true,
-		        serverSide: true,
-				deferRender: true,
-		        ajax: '/create/transaction',
-		        columns: [
-		        	{ data: 'reference_id', name: 'reference_id'},
-					{ data: 'process_types.name', name: 'process_types.name'},
-                    { data: 'client', name: 'client' },
-					{ data: 'description', name: 'description' },
-                    { data: 'status', name: 'status' },
-		            { data: 'action', name: 'action'}
-		        ],
-				columnDefs: [
-                {
-                    render: function (data, type, full, meta) {
-                        return "<div class='text-wrap width-201'>" + data + "</div>";
-                    },
-                    targets: 2
-                },
-				{
-					render: function (data, type, full, meta) {
-                        return "<div class='text-wrap width-201'>" + data + "</div>";
-                    },
-                    targets: 3,
-				}	
-				]
-		    });
-			$('div.dataTables_filter input').focus()
+		$(document).on('ready', function () {
+			// initialization of datatables
+			var datatable = $.HSCore.components.HSDatatables.init($('#datatableWithPagination'));
+			
+			$('#colsearch1').on( 'keyup', function () {
+			datatable
+				.columns( 0 )
+				.search( this.value )
+				.draw();
+			} );
+
+			$('#colsearch2').on( 'change', function () {
+			datatable
+				.columns( 1 )
+				.search( this.value )
+				.draw();
+			} );
+
+
+			$('#colsearch3').on( 'keyup', function () {
+			datatable
+				.columns( 2 )
+				.search( this.value )
+				.draw();
+			} );
+
+			$('#colsearch4').on( 'keyup', function () {
+			datatable
+				.columns( 3 )
+				.search( this.value )
+				.draw();
+			} );
+
+			$('#colsearch5').on( 'change', function () {
+			datatable
+				.columns( 4 )
+				.search( this.value )
+				.draw();
+			} );
+
+
+			// initialization of select2
+			$('.js-select2-custom').each(function () {
+				var select2 = $.HSCore.components.HSSelect2.init($(this));
+			});
 		});
 	</script>
 
+	
 	<script>
 		function setTwoNumberDecimal(event) {
 			this.value = parseFloat(this.value).toFixed(2);
@@ -632,36 +610,18 @@
 		    	if ( this.value == '0')
 			    {
 			        $("#PR").hide();
-			        $("#FA").hide();
-					$("#IB").hide();
-					$("#MA").hide();
-					$("#MLC").hide();
-					$("#PO").hide();
-					$("#PS").hide();
-					$("#VCR").hide();
 					$("#PODR").hide();	
+					$("#VCR").hide();
 			    }
 		      	//If red is selected, show red, hide yellow and blue.
 		      	if ( this.value == '1')
 		      	{
 		        	$("#PR").show();
 					$("#PR :input").prop("disabled", false);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
 					$("#PODR").hide();
 					$("#PODR :input").prop("disabled", true);
+					$("#VCR").hide();
+					$("#VCR :input").prop("disabled", true);
 		      	}
 		      
 		       //If yellow is selected, show yellow, hide red and blue.
@@ -669,185 +629,24 @@
 			    {
 			        $("#PR").hide();
 					$("#PR :input").prop("disabled", true);
-			        $("#FA").show();  
-					$("#FA :input").prop("disabled", false);
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
+					$("#PODR").show();
+					$("#PODR :input").prop("disabled", false);
 					$("#VCR").hide();
 					$("#VCR :input").prop("disabled", true);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
 			    }
 
 				if ( this.value == '3')
 			    {
 					$("#PR").hide();
 					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").show();
-					$("#IB :input").prop("disabled", false);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
 					$("#PODR").hide();
 					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '4')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").show();
-					$("#MA :input").prop("disabled", false);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '5')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").show();
-					$("#MLC :input").prop("disabled", false);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '6')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").show();
-					$("#PO :input").prop("disabled", false);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '7')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").show();
-					$("#PS :input").prop("disabled", false);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '8')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
 					$("#VCR").show();
 					$("#VCR :input").prop("disabled", false);
-					$("#PODR").hide();
-					$("#PODR :input").prop("disabled", true);
-
-			    }
-
-				if ( this.value == '9')
-			    {
-					$("#PR").hide();
-					$("#PR :input").prop("disabled", true);
-			        $("#FA").hide();
-					$("#FA :input").prop("disabled", true);   
-					$("#IB").hide();
-					$("#IB :input").prop("disabled", true);
-					$("#MA").hide();
-					$("#MA :input").prop("disabled", true);
-					$("#MLC").hide();
-					$("#MLC :input").prop("disabled", true);
-					$("#PO").hide();
-					$("#PO :input").prop("disabled", true);
-					$("#PS").hide();
-					$("#PS :input").prop("disabled", true);
-					$("#VCR").hide();
-					$("#VCR :input").prop("disabled", true);
-					$("#PODR").show();
-					$("#PODR :input").prop("disabled", false);
-
 			    }
 		    });
 		});
 	</script>
 @endsection
+
+

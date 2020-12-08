@@ -16,14 +16,11 @@ class ProcessTypeTableSeeder extends Seeder
             [
                 'name' => 'Purchase Request'
             ],
-        	[
-        		'name' => 'Financial Assistance'
-        	],
-			[
-				'name' => 'Voucher'
-			],
 			[
 				'name' => 'Purchase Order'
+			],
+			[
+				'name' => 'Voucher'
 			]
         ]);
     }

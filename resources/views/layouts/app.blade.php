@@ -6,11 +6,14 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- font --}}
     <link href="{{ asset('fonts/css2.css') }}" rel="stylesheet">
     <title>{{ config('app.name', 'laravel') }}</title>
+    {{-- CSS Implementing Plugins --}}
+    <link rel="stylesheet" href="{{ asset('vendor/icon-set/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/select2/dist/css/select2.min.css') }}">
     {{-- css --}}
     <link rel="stylesheet" href="{{ asset('css/theme.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/icon-set/style.css') }}">
     {{-- end css --}}
 
 </head>
@@ -38,29 +41,6 @@
           <!-- End Toggle -->
 
           <nav class="collapse navbar-collapse" id="navbarNavMenuDarkEg">
-          
-            {{-- <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Home</a>
-              </li>
-
-             
-              <li class="dropdown">
-                <a class="nav-link nav-link-toggle" href="javascript:;" id="dropdownSubMenuDarkEg" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-
-                <div class="dropdown-menu" aria-labelledby="dropdownSubMenuDarkEg" style="min-width: 230px;">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </li>
-              
-
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-            </ul> --}}
            <ul class="navbar-nav ml-auto">
               @guest
                 <li class="nav-item">
@@ -75,7 +55,7 @@
                 <li class="dropdown">
                   <a class="nav-link nav-link-toggle" href="javascript:;" id="dropdownSubMenuDarkEg" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Document</a>
                   <div class="dropdown-menu" aria-labelledby="dropdownSubMenuDarkEg" style="min-width: 230px;">
-                    <a class="dropdown-item" href="#">Create Document</a>
+                    <a class="dropdown-item" href="/create/transaction">Create Document</a>
                   </div>
                 </li>
 
@@ -129,7 +109,34 @@
     </header>
 <!-- End Header -->
     {{-- nav end --}}
-    @yield('content')
+    <main id="content" role="main" class="main">
+      @yield('content')
+      {{-- footer --}}
+      <br><br><br>
+      <div class="footer container">
+        <div class="row justify-content-between align-items-center">
+          <div class="col">
+            <p class="font-size-sm mb-0">© Electronic Document Tracking System. <span class="d-none d-sm-inline-block">2019 Local Government Unit.</span></p>
+          </div>
+          <div class="col-auto">
+            <div class="d-flex justify-content-end">
+              <!-- List Dot -->
+              <ul class="list-inline list-separator">
+                <li class="list-inline-item">
+                  <a class="list-separator-link" href="#">Quezon Bukidnon</a>
+                </li>
+  
+                <li class="list-inline-item">
+                  <a class="list-separator-link" href="#">8715 Philippines</a>
+                </li>
+              </ul>
+              <!-- End List Dot -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+		<!-- End Footer -->
     {{-- scripts --}}
     <!-- JS Global Compulsory -->
     <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
@@ -139,6 +146,10 @@
     <!-- JS Implementing Plugins -->
     <script src="{{ asset('vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
     <script src="{{ asset('vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
+    <script src="{{ asset('vendor/select2/dist/js/select2.full.min.js') }}"></script>
 
     <!-- JS Front -->
     <script src="{{ asset('js/theme.min.js') }}"></script>
@@ -159,6 +170,7 @@
     </script>
 
 
+
     <!-- JS Front -->
     {{-- end scripts --}}
     @yield('script')
@@ -166,6 +178,11 @@
     <script>
       $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
     </script>
+
+    {{-- Datatable Scripts --}}
+
+    {{-- end Datatable Scripts --}}
+  
     <!-- endbuild -->
 </body>
 </html>
