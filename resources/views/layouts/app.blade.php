@@ -9,9 +9,13 @@
     {{-- font --}}
     <link href="{{ asset('fonts/css2.css') }}" rel="stylesheet">
     <title>{{ config('app.name', 'laravel') }}</title>
+
     {{-- CSS Implementing Plugins --}}
     <link rel="stylesheet" href="{{ asset('vendor/icon-set/style.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/chart.js/dist/Chart.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/datatables.net.extensions/fixedColumns.dataTables.min.css') }}">
+
     {{-- css --}}
     <link rel="stylesheet" href="{{ asset('css/theme.min.css') }}">
     {{-- end css --}}
@@ -145,11 +149,18 @@
 
     <!-- JS Implementing Plugins -->
     <script src="{{ asset('vendor/hs-toggle-password/dist/js/hs-toggle-password.js') }}"></script>
+    <script src="{{ asset('vendor/hs-unfold/dist/hs-unfold.min.js') }}"></script>
+    <script src="{{ asset('vendor/hs-form-search/dist/hs-form-search.min.js') }}"></script>
     <script src="{{ asset('vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('vendor/jquery-mask-plugin/dist/jquery.mask.min.js') }}"></script>
+    <script src="{{ asset('vendor/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('vendor/chart.js/dist/Chart.min.js') }}"></script>
+    <script src="{{ asset('vendor/chart.js.extensions/chartjs-extensions.js') }}"></script>
+    <script src="{{ asset('vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/media/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables.net.extensions/select/select.min.js') }}"></script>
-    <script src="{{ asset('vendor/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('vendor/datatables.net.extensions/dataTables.fixedColumns.min.js') }}"></script>
+    
 
     <!-- JS Front -->
     <script src="{{ asset('js/theme.min.js') }}"></script>
@@ -178,11 +189,7 @@
     <script>
       $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
     </script>
-
-    {{-- Datatable Scripts --}}
-
-    {{-- end Datatable Scripts --}}
-  
+    
     <!-- endbuild -->
 </body>
 </html>

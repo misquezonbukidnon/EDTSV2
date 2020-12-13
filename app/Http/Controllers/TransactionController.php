@@ -45,8 +45,6 @@ class TransactionController extends Controller
                     return $button.$button1.$button2;
                 })
                 ->addColumn('status', function($data){
-                    // $button = 'status';
-                    // return $button;
                     switch ($data->statuses->name) {
                         case $data->statuses->name == "Complete":
                             $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-success"></span> '.$data->statuses->name.'</span></div>';
@@ -70,7 +68,7 @@ class TransactionController extends Controller
                     switch ($data->process_types_id) {
                         // Purchase Request
                         case $data->process_types_id == 1:
-                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->offices->name.'</span></div>';
+                            $column = '<div class="media-body"><span class="d-block h5 text-hover-primary mb-0">'.$data->offices->abbr.'</span></div>';
                             return $column;
                             break;
                     
@@ -109,7 +107,7 @@ class TransactionController extends Controller
         }
 
 
-        $transactions = Transaction::with('offices', 'process_types', 'pr_descriptions')->get();
+        $transactions = Transaction::with('offices', 'process_types', 'pr_descriptions', 'statuses', 'users')->get();
         $transactioncounts = Transaction::all()->count();
         $offices = Office::all();
         $processtypes = ProcessType::all();

@@ -1,5 +1,13 @@
 @extends('layouts.app')
 @section('content')
+	<style>
+		.text-wrap{
+		white-space:normal;
+		}
+		.width-200{
+			width:200px;
+		}
+	</style>
 	<div class="container">
 		<br>
 		@include('flash::message')
@@ -371,86 +379,83 @@
 			</div> --}}
 		<!-- End Table -->
 		<!-- Card -->
+		<!-- Card -->
 		<div class="card">
 			<!-- Header -->
 			<div class="card-header">
 			<div class="row justify-content-between align-items-center flex-grow-1">
 				<div class="col-12 col-md">
-					<div class="d-flex justify-content-between align-items-center">
-						<h5 class="card-header-title">Users</h5>
-						 <!-- Unfold -->
-						<div class="hs-unfold">
-							<a class="js-hs-unfold-invoker btn btn-icon btn-sm btn-ghost-secondary rounded-circle" href="javascript:;"
-							data-hs-unfold-options='{
-								"target": "#showHideDropdown",
-								"type": "css-animation"
-							}'>
-							<i class="tio-table"></i>
-							</a>
-					
-							<div id="showHideDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right dropdown-card" style="width: 15rem;">
-							<div class="card card-sm">
-								<div class="card-body">
-								<div class="d-flex justify-content-between align-items-center mb-3">
-									<span class="mr-2">Country</span>
-					
-									<!-- Checkbox Switch -->
-									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_country">
-									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_country" checked>
-									<span class="toggle-switch-label">
-										<span class="toggle-switch-indicator"></span>
-									</span>
-									</label>
-									<!-- End Checkbox Switch -->
-								</div>
-					
-								<div class="d-flex justify-content-between align-items-center mb-3">
-									<span class="mr-2">Position</span>
-					
-									<!-- Checkbox Switch -->
-									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_position">
-									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_position" checked>
-									<span class="toggle-switch-label">
-										<span class="toggle-switch-indicator"></span>
-									</span>
-									</label>
-									<!-- End Checkbox Switch -->
-								</div>
-					
-								<div class="d-flex justify-content-between align-items-center">
-									<span class="mr-2">Status</span>
-					
-									<!-- Checkbox Switch -->
-									<label class="toggle-switch toggle-switch-sm" for="toggleColumn_status">
-									<input type="checkbox" class="toggle-switch-input" id="toggleColumn_status" checked>
-									<span class="toggle-switch-label">
-										<span class="toggle-switch-indicator"></span>
-									</span>
-									</label>
-									<!-- End Checkbox Switch -->
-								</div>
-								</div>
-							</div>
-							</div>
-						</div>
-						<!-- End Unfold -->
-					</div>
+				<div class="d-flex justify-content-between align-items-center">
+					<h5 class="card-header-title">Users</h5>
+				</div>
 				</div>
 		
-				<div class="col-auto">
+				<div class="col-md-auto">
 				<!-- Filter -->
-				<form>
-					<!-- Search -->
-					<div class="input-group input-group-merge input-group-flush">
-					<div class="input-group-prepend">
-						<div class="input-group-text">
-						<i class="tio-search"></i>
+				<div class="row align-items-center">
+					<div class="col-auto">
+					<!-- Select -->
+					<select id="resOffice" class="js-select2-custom"
+						{{-- data-target-column-index="1" --}}
+						data-hs-select2-options='{
+						"minimumResultsForSearch": "Infinity",
+						"customClass": "custom-select custom-select-sm",
+						"dropdownAutoWidth": true,
+						"width": true
+						}'>
+						<option value="">Select Office</option>
+						@foreach ($offices as $data)
+							<option value="{{ $data->abbr }}">{{ $data->name }}</option>
+						@endforeach
+					</select>
+				<!-- End Select -->
+					<!-- Select -->
+					<select id="resClassification" class="js-select2-custom"
+							{{-- data-target-column-index="1" --}}
+							data-hs-select2-options='{
+							"minimumResultsForSearch": "Infinity",
+							"customClass": "custom-select custom-select-sm",
+							"dropdownAutoWidth": true,
+							"width": true
+							}'>
+						<option value="">Classification</option>
+						<option value="Purchase Request">Purchase Request</option>
+						<option value="Purchase Order">Purchase Order</option>
+						<option value="Voucher">Voucher</option>
+					</select>
+					<!-- End Select -->
+					<!-- Select -->
+					<select id="resStatus" class="js-select2-custom"
+							{{-- data-target-column-index="4" --}}
+							data-hs-select2-options='{
+							"minimumResultsForSearch": "Infinity",
+							"customClass": "custom-select custom-select-sm",
+							"dropdownAutoWidth": true,
+							"width": true
+							}'>
+						<option value="">Stataus</option>
+						<option value="In Progress">In Progress</option>
+						<option value="Completed">Completed</option>
+						<option value="Cancelled">Cancelled</option>
+					</select>
+					<!-- End Select -->
+					</div>
+		
+					<div class="col">
+					<form>
+						<!-- Search -->
+						<div class="input-group input-group-merge input-group-flush">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+							<i class="tio-search"></i>
+							</div>
 						</div>
+						<input id="datatableWithFilterSearch" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
+						</div>
+						<!-- End Search -->
+					</form>
 					</div>
-					<input id="datatableWithSearchInput" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
-					</div>
-					<!-- End Search -->
-				</form>
+				</div>
 				<!-- End Filter -->
 				</div>
 			</div>
@@ -459,47 +464,129 @@
 		
 			<!-- Table -->
 			<div class="table-responsive datatable-custom">
-			<table id="datatableWithSearch" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
-					data-hs-datatables-options='{
-					"order": [],
-					"search": "#datatableWithSearchInput",
-					"isResponsive": false,
-					"isShowPaging": false,
-					"pagination": "datatableWithSearch"
-					}'>
-				<thead class="thead-light">
-				<tr>
-					<th>Name</th>
-					<th>Position</th>
-					<th>Country</th>
-					<th>Status</th>
-				</tr>
-				</thead>
-		
-				<tbody>
+				{{-- DataTable Server-Side - To be fixed --}}
+				{{-- <table id="recordsDataTable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+						data-hs-datatables-options='{
+						"order": [],
+						"search": "#datatableWithFilterSearch",
+						"isResponsive": false,
+						"isShowPaging": false,
+						"pagination": "datatableWithFilterPagination",
+						"serverSide": true,
+						"processing": true,
+						"ajax": "/create/transaction",
+						"columns": [
+							{ "data": "reference_id", "name": "reference_id", "orderable": true, "searchable": true },
+							{ "data": "process_types.name", "name": "process_types.name", "orderable": true, "searchable": true },
+							{ "data": "client", "name": "client", "orderable": true, "searchable": true },
+							{ "data": "description", "name": "description", "orderable": true, "searchable": true },
+							{ "data": "status", "name": "status", "orderable": true, "searchable": true },
+							{ "data": "action", "name": "action", "orderable": true, "searchable": true }
+						]
+						}'>
+					<thead class="thead-light">
 					<tr>
-						<td>
-						  <a class="media align-items-center" href="../user-profile.html">
-							<div class="avatar avatar-circle mr-3">
-							  <img class="avatar-img" src="{{ asset('img/160x160/img10.jpg') }}" alt="Image Description">
-							</div>
-							<div class="media-body">
-							  <span class="d-block h5 text-hover-primary mb-0">Amanda Harvey <i class="tio-verified text-primary" data-toggle="tooltip" data-placement="top" title="Top endorsed"></i></span>
-							  <span class="d-block font-size-sm text-body">amanda@example.com</span>
-							</div>
-						  </a>
-						</td>
-						<td>
-						  <span class="d-block h5 mb-0">Director</span>
-						  <span class="d-block font-size-sm">Human resources</span>
-						</td>
-						<td>United Kingdom <span class="text-hide">Code: GB</span></td>
-						<td>
-						  <span class="legend-indicator bg-success"></span>Active
-						</td>
+						<th>Reference #</th>
+						<th>Classification</th>
+						<th>Client</th>
+						<th>Description</th>
+						<th>Status</th>
+						<th>Action</th>
 					</tr>
-				</tbody>
-			</table>
+					</thead>
+			
+					<tbody>
+					</tbody>
+				</table> --}}
+				<table id="recordsDataTable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+						data-hs-datatables-options='{
+						"order": [],
+						"search": "#datatableWithFilterSearch",
+						"isResponsive": false,
+						"isShowPaging": false,
+						"pagination": "datatableWithFilterPagination",
+						"scrollX": true,
+						"scrollCollapse": true,
+						"autoWidth": true,
+						"fixedColumns": true,  
+						"columnDefs": [
+							{ "width": "150px", "targets": [0,1] },       
+							{ "width": "40px", "targets": [3] }
+						]
+						}'>
+					<thead class="thead-light">
+					<tr>
+						<th>Reference #</th>
+						<th>Classification</th>
+						<th>Client</th>
+						<th>Description</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+					</thead>
+			
+					<tbody>
+						@foreach($transactions as $data)
+							<tr>
+								<td>
+									<div class="media-body">
+										<span class="d-block h5 text-hover-primary mb-0">{{ $data->reference_id }}</span>
+										<span class="d-block font-size-sm text-body">{{ $data->users->name }}</span>
+									</div>
+								</td>
+								<td>
+									<div class="media-body">
+										<span class="d-block h5 text-hover-primary mb-0">{{ $data->process_types->name }}</span>
+									</div>
+								</td>
+								<td>
+									<div class="media-body">
+										@switch($data->process_types_id)
+											@case($data->process_types_id == 1)
+												<span class="d-block h5 text-hover-primary mb-0">{{ $data->offices->abbr }}</span>
+												@break
+											@case($data->process_types_id == 2)
+												<span class="d-block h5 text-hover-primary mb-0">{{ $data->client }}</span>
+												@break
+											@case($data->process_types_id == 3)
+												<span class="d-block h5 text-hover-primary mb-0">{{ $data->client }}</span>
+												@break
+											@default
+												<p>Please contact administrator</p>
+										@endswitch
+									</div>
+								</td>
+								<td>
+									<div class="media-body">
+										<span class="d-block h5 text-hover-primary mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+									</div>
+								</td>
+								<td>
+									<div class="media-body">
+										@switch($data->statuses->name)
+											@case($data->statuses->name == "Complete")
+												<span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-success"></span>{{ $data->statuses->name }}</span>
+												@break
+											@case($data->statuses->name == "In Progress")
+												<span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-primary"></span>{{ $data->statuses->name }}</span>
+												@break
+											@case($data->statuses->name == "Cancelled")
+												<span class="d-block h5 text-hover-primary mb-0"><span class="legend-indicator bg-danger"></span>{{ $data->statuses->name }}</span>
+												@break
+											@default
+												<p>Please contact administrator</p>
+										@endswitch
+									</div>
+								</td>
+								<td>
+									<a href="/find/records/{{ $data->id }}" class="btn btn-xs btn-outline-primary"><i class="tio-zoom_in tio-lg">zoom_in</i></a>
+									<a href="/edit/transaction/{{ $data->id }}" class="btn btn-xs btn-outline-primary"><i class="tio-edit tio-lg"></i></a>
+									<a href="/barcode/transaction/{{ $data->id }}" class="btn btn-xs btn-outline-primary"><i class="tio-barcode tio-lg"></i></a>
+								</td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
 			</div>
 			<!-- End Table -->
 		
@@ -507,14 +594,13 @@
 			<div class="card-footer">
 			<!-- Pagination -->
 			<div class="d-flex justify-content-center justify-content-sm-end">
-				<nav id="datatableWithSearch" aria-label="Activity pagination"></nav>
+				<nav id="datatableWithFilterPagination" aria-label="Activity pagination"></nav>
 			</div>
 			<!-- End Pagination -->
 			</div>
 			<!-- End Footer -->
 		</div>
 		<!-- End Card -->
-		
 		<br><br>
 	</div>
 @endsection
@@ -523,80 +609,51 @@
 		$('div.alert').not('.alert-important').delay(3000).fadeOut(350);
 	</script>
 
+	{{-- DataTable --}}
 	<script>
 		$(document).on('ready', function () {
-		// initialization of datatables
-		var datatable = $.HSCore.components.HSDatatables.init($('#datatableWithSearch'));
-	
-		$('#toggleColumn_position').change(function (e) {
-			datatableSortingColumn.columns(1).visible(e.target.checked)
-		})
-	
-		$('#toggleColumn_country').change(function (e) {
-			datatable.columns(2).visible(e.target.checked)
-		})
-	
-		$('#toggleColumn_status').change(function (e) {
-			datatableSortingColumn.columns(3).visible(e.target.checked)
-		})
+			// initialization of datatables
+			var datatable = $.HSCore.components.HSDatatables.init($('#recordsDataTable'));
+
+			// $.fn.dataTable.ext.errMode = 'throw';
+			$('#resOffice').on( 'change', function () {
+				datatable
+					.columns( 2 )
+					.search( this.value )
+					.draw();
+			} );
+			
+			$('#resClassification').on( 'change', function () {
+				datatable
+					.columns( 1 )
+					.search( this.value )
+					.draw();
+			} );
+
+			$('#resStatus').on( 'change', function () {
+				datatable
+					.columns( 4 )
+					.search( this.value )
+					.draw();
+			} );
+		
+			// initialization of select2
+			$('.js-select2-custom').each(function () {
+				var select2 = $.HSCore.components.HSSelect2.init($(this));
+			});
+
 		});
-  	</script>
+
+	</script>
+	{{-- End DataTable --}}
+	
+
 
 	<script>
 		function disableFunction() {
 			$('#btnverzenden').prop('disabled', true);
 		}
 	</script>
-
-	<script>
-		$(document).on('ready', function () {
-			// initialization of datatables
-			var datatable = $.HSCore.components.HSDatatables.init($('#datatableWithPagination'));
-			
-			$('#colsearch1').on( 'keyup', function () {
-			datatable
-				.columns( 0 )
-				.search( this.value )
-				.draw();
-			} );
-
-			$('#colsearch2').on( 'change', function () {
-			datatable
-				.columns( 1 )
-				.search( this.value )
-				.draw();
-			} );
-
-
-			$('#colsearch3').on( 'keyup', function () {
-			datatable
-				.columns( 2 )
-				.search( this.value )
-				.draw();
-			} );
-
-			$('#colsearch4').on( 'keyup', function () {
-			datatable
-				.columns( 3 )
-				.search( this.value )
-				.draw();
-			} );
-
-			$('#colsearch5').on( 'change', function () {
-			datatable
-				.columns( 4 )
-				.search( this.value )
-				.draw();
-			} );
-
-
-			// initialization of select2
-			$('.js-select2-custom').each(function () {
-				var select2 = $.HSCore.components.HSSelect2.init($(this));
-			});
-		});
-	</script>
-
 	
 	<script>
 		function setTwoNumberDecimal(event) {
